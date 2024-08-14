@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endorian Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('bngrnd.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            text-align: center;
+            margin: 0;
+            padding: 50px;
+            overflow: hidden;
+        }
+        .textbox {
+            background-color: rgba(51, 0, 102, 0.8);
+            color: #ffffff;
+            border: 3px dashed #800080;
+            border-radius: 10px;
+            padding: 15px;
+            width: 80%;
+            margin: 20px auto;
+            font-size: 20px;
+            box-shadow: 0px 0px 10px #800080;
+            letter-spacing: 2px;
+            line-height: 1.5;
+            text-align: left;
+        }
+        .enter-button {
+            background-color: #4b0082;
+            color: #ffffff;
+            padding: 15px 30px;
+            border: 2px solid #800080;
+            border-radius: 20px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0px 0px 15px #800080;
+        }
+        .enter-button:hover {
+            background-color: #800080;
+        }
+        .hidden-content {
+            display: none;
+        }
+        audio {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 300px;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div id="introScreen">
+        <h1>Welcome to the Endorian Translator</h1>
+        <button class="enter-button" onclick="enterSite()">Enter</button>
+    </div>
+
+    <div id="mainContent" class="hidden-content">
+        <textarea id="englishText" class="textbox" rows="4" placeholder="Enter English here..."></textarea>
+        <textarea id="endText" class="textbox" rows="4" placeholder="Enter Endorian here..."></textarea>
+
+        <audio id="backgroundMusic" controls autoplay loop>
+            <source src="background-music.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <script>
+        function enterSite() {
+            document.getElementById('introScreen').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('backgroundMusic').play();
+        }
+
+        const customAlphabet = {
+            'a': 'ᚭ',  'b': 'ᛒ', 'c': 'ᚳ', 'd': 'ᛞ', 'e': 'ᛇ',
+            'f': 'ᚠ', 'g': 'ᚷ', 'h': 'ᚻ', 'i': 'ᛜ', 'j': 'ᛃ',
+            'k': 'ᚴ', 'l': 'ᛚ', 'm': 'ᛗ', 'n': 'ᚾ', 'o': 'ᛟ',
+            'p': 'ᛈ', 'q': 'ᛩ', 'r': 'ᚱ', 's': 'ᛋ', 't': 'ᛏ',
+            'u': 'ᚢ', 'v': 'ᚡ', 'w': 'ᚹ', 'x': 'ᛪ', 'y': 'ᚣ',
+            'z': 'ᛉ',
+
+            'A': 'ᚱ', 'B': 'ᛂ', 'C': 'ᛒ', 'D': 'ᛝ', 'E': 'ᚳ',
+            'F': 'ᛆ', 'G': 'ᚧ', 'H': 'ᛒ', 'I': 'ᚾ', 'J': 'ᛐ',
+            'K': 'ᚷ', 'L': 'ᛊ', 'M': 'ᚺ', 'N': 'ᚱ', 'O': 'ᛉ',
+            'P': 'ᛗ', 'Q': 'ᛤ', 'R': 'ᚥ', 'S': 'ᛓ', 'T': 'ᛑ',
+            'U': 'ᚳ', 'V': 'ᛣ', 'W': 'ᚽ', 'X': 'ᛆ', 'Y': '᛬',
+            'Z': 'ᛅ',
+
+            '0': 'ᚠ', '1': 'ᚡ', '2': 'ᚢ', '3': 'ᚣ', '4': 'ᛇ',
+            '5': 'ᚷ', '6': 'ᛉ', '7': 'ᛋ', '8': 'ᛏ', '9': 'ᚾ',
+
+            '!': 'ᚻ', '@': 'ᚼ', '#': 'ᚽ', '$': 'ᚾ', '%': 'ᛡ',
+            '^': 'ᛆ', '&': 'ᚧ', '*': 'ᚨ', '(': 'ᛩ', ')': 'ᛪ',
+            '-': '᛫', '_': '᛬', '=': '᛭', '+': 'ᛮ', '[': 'ᛯ',
+            ']': 'ᛰ', '{': 'ᛱ', '}': 'ᛲ', ';': 'ᛳ', ':': 'ᛴ',
+            "'": 'ᛵ', '"': 'ᛶ', ',': 'ᛷ', '.': 'ᛸ', '/': '᛹',
+            '\\': '᛺', '?': '᛻', '<': '᛼', '>': '᛽', '|': '᛾',
+            '`': '᛿', '~': 'ᜀ',
+
+            ' ': ' ', '\n': '\n', '\t': '\t',
+        };
+
+        const reverseAlphabet = Object.fromEntries(
+            Object.entries(customAlphabet).map(([key, value]) => [value, key])
+        );
+
+        document.getElementById('englishText').addEventListener('input', function () {
+            const text = this.value;
+            const translatedText = text.split('').map(char => customAlphabet[char] || char).join('');
+            document.getElementById('endText').value = translatedText;
+        });
+
+        document.getElementById('endText').addEventListener('input', function () {
+            const text = this.value;
+            const originalText = text.match(/.{1,2}/g).map(char => reverseAlphabet[char] || char).join('');
+            document.getElementById('englishText').value = originalText;
+        });
+    </script>
+</body>
+</html>
